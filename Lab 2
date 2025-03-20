@@ -1,0 +1,185 @@
+import java.util.Scanner; // imports Scanner Library
+import java.io.File; // imports File library
+import java.io.FileNotFoundException; // imports exception library
+
+class Lab2{
+  
+  public static void main(String[] args){
+    
+    try{
+    File file = new File("input2.txt"); // upload file
+    Scanner scanner = new Scanner(file); // scan file 
+    float[] dailyAverageSums; // make array accesible for other methods
+    int rows = rowCounter(scanner);
+    dailyAverageSums = new float[rows];
+
+    readAndStore(scanner, rows, dailyAverageSums); // call function to read and print 2D array
+    }catch(FileNotFoundException e){
+      System.out.println("Exception found at: " + e);
+      e.printStackTrace();
+    }
+  }
+  
+  
+  //method 0
+   static int rowCounter(Scanner myScanner){
+    String line;
+    int rows = 0;
+    
+    while(myScanner.hasNextLine()){//make separate method and return row amount
+        line = myScanner.nextLine(); // read next line in the file
+        rows += 1;	// new line means new row
+    }
+    return rows;
+  }
+  
+
+  
+  // method 1
+  static void readAndStore(Scanner myScanner,int rows, float [] dailyAverageSums){   //method to scan and store file in 2D array
+    int colCounter = 0;
+    String line;
+    System.out.println("The input file is: input2.txt");
+    System.out.println("The temperature data in the 2D array is: ");
+   
+
+    
+    
+    int[][] storedArray = new int[rows][]; // declare 2D array, we know row size but not column size
+    myScanner.close(); // EOF so close it 
+    
+    try{
+    File secondFile = new File("input2.txt");	// re-declare to go back to beginning of file
+    Scanner secondScanner = new Scanner(secondFile);
+    rows = 0;	//go back to the first row
+    String string;
+    while(rows < storedArray.length){	//go from first row to last row
+      string = secondScanner.nextLine();	//get the next line
+      String[] stringOfNumbersWithoutSpaces = string.split("\\s+");	// cut the string at whitespace to get int amount
+      // now i have a string array of numbers
+      storedArray[rows] = new int[stringOfNumbersWithoutSpaces.length]; //initialize each row with its own col length
+      // each row will have a col size of the split string size
+      // convert the strings into ints, store in array and print
+      for(int colIndex = 0; colIndex < stringOfNumbersWithoutSpaces.length; colIndex++){
+        storedArray[rows][colIndex] = Integer.parseInt(stringOfNumbersWithoutSpaces[colIndex]);
+        System.out.print(storedArray[rows][colIndex] + " ");
+      }
+      rows++;	// move to next row 
+      System.out.println();// print a new line for the new row 
+    	}
+     System.out.println("-------------------------");
+     dailyAverageTemperature(storedArray, dailyAverageSums);
+     System.out.println("-------------------------");
+     timeSlotAverage(storedArray);
+     System.out.println("-------------------------");
+     lowestAndHighestDay(dailyAverageSums);
+      
+    }catch(FileNotFoundException e){
+      System.out.println("Exception found at: " + e);
+      e.printStackTrace();
+    }
+    
+  }  
+  
+  
+  //method 2
+  public static void dailyAverageTemperature(int[][] arr, float [] dailyAverageSums){	//import the 2D array from previous method since it is not global
+    System.out.println("Daily Averages: ");
+    //dailyAverageSums = new float[arr.length];	//create array to store the daily averages
+    
+    for(int i = 0; i < arr.length; i++){	// for every row
+      for(int j = 0; j < arr[i].length; j++){	//for every column
+        dailyAverageSums[i] += arr[i][j];	// add each number in each row
+      }
+      dailyAverageSums[i] = dailyAverageSums[i] / (arr[i].length);	// divide the sum by the amount of numbers 
+    }
+    
+    for(int i = 0; i < dailyAverageSums.length; i++){
+      if((dailyAverageSums[i] - (int)dailyAverageSums[i]) == 0 ){	// if number is an integer, print an int
+      System.out.println("Day " + (i+1) + ": Average Temperature = " + (int)dailyAverageSums[i]);
+      }
+      else{System.out.println("Day " + (i+1) + ": Average Temperature = " + dailyAverageSums[i]);}// else if !int, print a float
+
+    }
+  }
+  
+  
+  
+  //method 3
+  static void timeSlotAverage(int[][] arr){
+    System.out.println("Average Temperature For Each Time Slot (Accross All Days)");
+    double[] time = {.0, .0, .0, .0, .0, .0}; //array will store time sums
+    double counter1=0, counter2=0, counter3=0, counter4=0, counter5=0, counter6=0;
+    //counters will count how many numbers were added so we can later get average
+    for(int i = 0; i < arr.length; i++){
+      for(int j = 0; j < arr[i].length; j++){
+        if(j == 0){ //for all 0 indexes
+          time[0] += arr[i][0]; //store the sum in time[]
+          counter1 += 1;    //update counter to later get average 
+        }
+        else if(j == 1){    //for all 1 indexes
+          time[1] += arr[i][1];
+          counter2 += 1;
+        }
+        else if(j == 2){    //for all 2 indexes
+          time[2] += arr[i][2];
+          counter3 += 1;
+        }
+        else if(j == 3){        // for all 3 indexes
+          time[3] += arr[i][3];
+          counter4 += 1;
+        }   
+        else if(j == 4){        // for all 4 indexes
+          time[4] += arr[i][4];
+          counter5 += 1;
+        }
+        else if(j == 5){    //for all 5 indexes
+          time[5] += arr[i][5];
+          counter6 += 1;
+        }
+      }
+    }
+    time[0] /= counter1;    //take all averages 
+    time[1] /= counter2;
+    time[2] /= counter3;
+    time[3] /= counter4;
+    time[4] /= counter5;
+    time[5] /= counter6;
+    
+    
+    // if statement to print int/double based on what the decimal amount is
+    
+    for(int i = 0; i < time.length; i++){
+      if(time[i] - (int)time[i] == 0){  //if double ends in .0 print int, else print double
+        System.out.println("Time Slot " + (i+1)+ ": Average Temperature = " + (int)time[i]);
+      }else{
+        System.out.printf("Time Slot " + (i+1) + ": Average Temperature = %.1f\n", time[i]);
+      }
+      
+    }
+  }
+  
+  //method 4 
+  public static void lowestAndHighestDay(float [] dailyAverageSums){
+      float highestDay = dailyAverageSums[0];   // highest and lowest equals first num of global average array
+      float lowestDay = dailyAverageSums[0];
+      int highestDayNumber = 0, lowestDayNumber = 0; // track what the actual day is 
+      
+      for(int i = 1; i < dailyAverageSums.length; i++){ //skip 0 since it is the min and max
+          if(dailyAverageSums[i] > highestDay){ //if a new max is found
+              highestDay = dailyAverageSums[i];
+              highestDayNumber = i; //tracks the actual day aka i+1
+          }
+          if(dailyAverageSums[i] < lowestDay){  //if a new min is found 
+              lowestDay = dailyAverageSums[i];
+              lowestDayNumber = i;
+          }
+      }
+      System.out.println("More Summary:");
+      System.out.println("Day with Lowest Average Temperature: Day " + (lowestDayNumber+1) + " with Average Temperature = " + lowestDay);
+      System.out.println("Day with Highest Average Temperature: Day " + (highestDayNumber+1) + " with Average Temperature = " + highestDay);
+  }
+
+}
+
+------------
