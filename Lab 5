@@ -1,0 +1,294 @@
+import java.util.Arrays;
+import java.util.List;
+class Lab5{  
+  
+   /**
+   * Do not change the main method.
+   */
+  public static void main(String[] args){
+    System.out.println("**************************");    
+    System.out.println("Testing the method howManyDigits");
+    System.out.println(howManyDigits("nBdj^19hb1^3j"));
+    System.out.println(howManyDigits("Elementary data structures"));
+    System.out.println(howManyDigits("H1Lolow2World !"));
+    System.out.println(howManyDigits("")); 
+    
+    System.out.println("**************************");    
+    System.out.println("Testing the method containsCapital");
+    System.out.println(containsCapital("uteP"));
+    System.out.println(containsCapital("abcba")); 
+    System.out.println(containsCapital("12#(1)b!nc!"));
+    System.out.println(containsCapital("12#(1)b!nc!X"));
+    
+    System.out.println("**************************");    
+    System.out.println("Checking for Palindromes:");
+    System.out.println(checkPalindrome("zxcxz"));
+    System.out.println(checkPalindrome("zxccxz"));
+    System.out.println(checkPalindrome("1xccxx1"));
+
+    System.out.println("**************************");    
+    System.out.println("Reversing a given string:");
+    System.out.println(reverseOrder("POT"));
+    System.out.println(reverseOrder("ZIGZAG"));
+    System.out.println(reverseOrder("PETU"));
+    
+    System.out.println("**************************");
+    System.out.println("Testing returnSubstring");
+    System.out.println(returnSubstring("Apple", "aPLe"));
+    System.out.println(returnSubstring(
+          "Th#is#,% is, a( test.", "#,%()"));
+    System.out.println(returnSubstring(
+          "12T2o1 2b11e2, 1o2r3 @n12#o7t9 ^t%2o1 b*7#e.", 
+          "1234567890@%#^*+"));
+    System.out.println(returnSubstring(
+          "What's in a name? A rose by any other name would smell as sweet.", 
+          "aeiouAEIOU"));
+    
+    System.out.println("**************************");
+    System.out.println("Testing recursive binary search with array of int.");
+    int[] arr0 = {12, 19, 21, 25, 27, 28, 30, 33, 34, 48};
+    int key = 29;
+    int pos = binaryNumSearch(arr0, key, 0, arr0.length-1);
+    System.out.println(key+" is in location "+pos);
+
+    int[] arr1 = {13, 15, 19, 41, 45, 54, 60, 64, 66, 71};
+    key = 15;
+    pos = binaryNumSearch(arr1, key, 0, arr1.length-1);
+    System.out.println(key+" is in location "+pos);
+
+    int[] arr2 = {11, 12, 18, 32, 33, 37, 38, 39, 54, 56};
+    key = 56;
+    pos = binaryNumSearch(arr2, key, 0, arr2.length-1);
+    System.out.println(key+" is in location "+pos);
+
+
+    System.out.println("**************************");
+    System.out.println("Testing recursive binary search with String.");
+    String str="nMnxbShfg#iNfhT";
+    str=getSortedString(str);
+    char ch = 'n';    
+    int loc =binaryCharSearch(str, ch, 0, str.length()-1);    
+    System.out.println(ch+" in "+str+" is found in location "+loc);
+    
+    str=getSortedString("fantastic");
+    ch = 'T';    
+    loc =binaryCharSearch(str, ch, 0, str.length()-1);    
+    System.out.println(ch+" in "+str+" is found in location "+loc);    
+    str=getSortedString("Global warming");
+    ch = ' ';    
+    loc =binaryCharSearch(str, ch, 0, str.length()-1);    
+    System.out.println(ch+" in "+str+" is found in location "+loc);        
+    
+    str=getSortedString("abcdxyz");
+    ch = 'x';    
+    loc =binaryCharSearch(str, ch, 0, str.length()-1);    
+    System.out.println(ch+" in "+str+" is found in location "+loc);            
+    
+  }
+  
+  /**
+   * Do not change this method.
+   */
+  static String getSortedString(String st){
+        // Construct an array of characters
+        char arr[] = st.toCharArray();
+ 
+        // Sort the array using Java's sorting facility.
+        Arrays.sort(arr);
+ 
+        // convert the array of characters to a String
+        // and return it.
+        return new String(arr);
+  }
+  
+  
+  /**
+   * Write a recursive method to return number of digits a string
+   * contains. 
+   * @param str
+   * @return 
+   */
+  static int howManyDigits(String str){
+      // CHANGE THE BODY OF THIS METHOD
+      //base case
+      if(str.length() == 0){//if we reached the end of the string, return 0 
+          return 0;
+      }
+      //if index 0 is a digit, add one and call recursively with str starting at index 1 to the end 
+      if(Character.isDigit(str.charAt(0))){
+          return 1 + howManyDigits(str.substring(1));
+        //if index 0 was not a digit, do not add 1 
+      }else{
+          return howManyDigits(str.substring(1));
+      }
+  }
+  
+  /**
+   * Write a recursive method to find if a string contains
+   * any capital letter (any letter between A-Z).
+   * @param str
+   * @return 
+   */
+  static boolean containsCapital(String str){
+      // CHANGE THE BODY OF THIS METHOD
+      //base case
+      if(str.length() == 0){//if we reached the end of the string, return false
+          return false;
+      }
+      //if index 0 is uppercase, return true because we are looking for at least one capital 
+      if(Character.isUpperCase(str.charAt(0))){
+          return true;
+      }
+      //if index 0 was not capital, search for a capital in index 1 to the end of the string 
+      return containsCapital(str.substring(1));
+  }
+  
+  /** 
+   * Write a recursive method to check if a given string
+   * is a Palindrome.
+   * @param str
+   * @return 
+   */
+  static boolean checkPalindrome(String str){
+      // CHANGE THE BODY OF THIS METHOD
+      //base case
+      if(str.length() == 0 || str.length() == 1){
+          return true;
+          //if we cut the string to the point that we have 0 or 1 chars, 
+          //everything else was a match, so return true 
+      }
+      //problem solving
+      //if the first and last indeces are equal, drop them and call the method again 
+      if(str.charAt(0) == str.charAt(str.length()-1)){
+          return checkPalindrome(str.substring(1, str.length()-1));//substring goes up to but not including the end 
+      }
+      //if the first and last indeces are not equal, it is not a palindrome, so return false 
+      else{
+          return false;
+      }
+  }
+  
+  
+  /** 
+   * Write a recursive method to reverse the order
+   * of a given string.
+   * @param str
+   * @return 
+   */
+  static String reverseOrder(String str){
+      // CHANGE THE BODY OF THIS METHOD
+      //base case
+      //if we cut the string to the point where its empty, return an empty string 
+      if(str.length() == 0){
+          return "";
+      }
+      //problem solving
+      //return the last index and call with a substring starting from index 0 to the second-to-last index  
+      return str.charAt(str.length()-1) + reverseOrder(str.substring(0, str.length()-1));
+  }
+  
+  /**
+   * Write a recursive method that will return 
+   * a string containing only the characters of a given
+   * string but not in another string.
+   * 
+   * You are not allowed to use the replace or 
+   * replaceAll method of the String class.
+   * 
+   * The returned string must contain the characters 
+   * of the given string in the same sequence they
+   * appear in the given String.
+   * @param given The original string to filter.
+   * @param unexpectedCh The string containing characters 
+   * to be removed.
+   * @return A new string with only the characters from 
+   * the given string that are not in unexpectedCh
+   */
+  static String returnSubstring(String given,
+          String unexpectedCh){
+      // CHANGE THE BODY OF THIS METHOD 
+      //base case (if we compared all chars, return the modified string)
+      if(unexpectedCh.length() == 0) return given;
+      //problem solving (return a modified given string, skipping index 0 of undexpectedCh)
+      if(given.contains(unexpectedCh.substring(0,1))){
+          int index = given.indexOf(unexpectedCh.substring(0,1));
+          given = given.substring(0, index)+given.substring(index+1);
+          //if theres another instance of index 0, call the method until there are no more instances  
+          if(given.contains(unexpectedCh.substring(0,1))){
+              return returnSubstring(given, unexpectedCh.substring(0));
+          }
+          //if there was only one instance of index 0, move on to index 1 of unexpectedCh
+          return returnSubstring(given, unexpectedCh.substring(1));
+      }
+      //if there were no instances of index 0, move on to index 1 of unexpectedCh
+      return returnSubstring(given, unexpectedCh.substring(1));
+    }
+
+  
+  
+  /**
+   * Perform a recursive binary search to find the 
+   * index of a key in a sorted array.
+   * If found, return its index. If not, 
+   * return -(insertion point+1).
+   *
+   * @param arr  The sorted array of integers.
+   * @param key  The integer value to search for.
+   * @param low  The lower bound of the search range.
+   * @param high The upper bound of the search range.
+   * @return The index of the key if found, 
+   * or -(insertion point+1) if not found.
+   */
+  static int binaryNumSearch(int[] arr, int key, //we are assuming the array is sorted
+    int low, int high) {
+    // CHANGE THE BODY OF THIS METHOD 
+    //find the middle index 
+    int middle = (low+high)/2;
+    //base case, if low crosses high it means the key was not found 
+    if(low > high) return -(low+1);
+    //problem solving (3 cases)
+    //if the key is at the middle index, return the middle index 
+    if(key == arr[middle]) return middle;
+    //if the key is smaller than the middle value, move high to (middle-1)
+    if(key < arr[middle]) return binaryNumSearch(arr, key, low, middle-1);
+    //if the key is bigger than the middle value, move low to (middle+1)
+    if(key > arr[middle]) return binaryNumSearch(arr, key, middle+1, high);
+    
+    return 0;//ensure all possible execution paths return a value before reaching the final statement
+  }
+
+  /**
+   * Write a recursive binary search method to find 
+   * the index of a character in a string. If
+   * the character appears multiple times, return
+   * the index of the one that is first encountered 
+   * by binary search.
+   * @param str The sorted string to search in.
+   * @param searchee The character to find.
+   * @param start The starting index of the search range.
+   * @param end The ending index of the search range.
+   * @return The index of the character if found, else -1. 
+   */
+
+  static int binaryCharSearch( //we are assuming the array is sorted
+          String str, 
+          char searchee, 
+          int start, int end){
+      // CHANGE THE BODY OF THIS METHOD
+      //base case, if start crosses end, the char was not found 
+      if(start>end) return -1;
+      //problem solving
+      //set the middle index 
+      int middle = (start+end)/2;
+      //use the ASCII values to compare 
+      //if the char was found at the middle index, return the middle index 
+      if(searchee == str.charAt(middle)) return middle;
+      //if the char is smaller than the middle char, modify the end 
+      if(searchee < str.charAt(middle)) return binaryCharSearch(str, searchee, start, middle-1);
+      //if the char is bigger than the middle char, modify the start 
+      if(searchee > str.charAt(middle)) return binaryCharSearch(str, searchee, middle+1, end);
+      
+      return 0;//ensure all possible execution paths return a value before reaching the final statement
+  }
+}
+
