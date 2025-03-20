@@ -1,0 +1,203 @@
+
+import java.io.File;
+import java.util.Scanner;
+
+class Lab6 {
+  public static void main(String[] args){
+    // DO NOT CHANGE THE main METHOD.
+    String fileName = "input.txt";
+    
+    Carton ll = createLinkedListFromFile(fileName);
+    
+    System.out.println("Total cartons in the linked list: " + countCartons(ll));
+    
+    printAllCartons(ll);
+    
+    System.out.println(); 
+    System.out.println("I will list cubic cartons now.");
+    
+    cubicAnalysis(ll);
+    
+    System.out.println();    
+    System.out.println("I will now print information of the largest carton.");    
+    printLargestCartonInLL(ll);
+    
+    System.out.println();        
+    System.out.println("I will now print information of the smallest carton.");        
+    printSmallestCartonInLL(ll);
+    
+    Carton revLL = reverseLL(ll);
+    System.out.println();
+    System.out.println("Linked list after reversal: ");
+    printAllCartons(revLL);   
+    
+  }
+  
+  // WRITE YOUR METHODS HERE.
+  public static Carton createLinkedListFromFile(String fileName){
+    //edge case
+    if(fileName.length() == 0)
+    {
+        System.out.println("File name is needed");
+        return null;
+    }
+    Carton current = null;
+    Carton head = null;
+    try{
+        //read and store file ONCE
+        File file = new File(fileName);
+        Scanner scanner = new Scanner(file);
+
+        while(scanner.hasNextLine()){//create a temp node, initiate the values, and append to the linkedlist 
+            double width = scanner.nextDouble();
+            double height = scanner.nextDouble();
+            double length = scanner.nextDouble();
+
+            Carton temp = new Carton(width, height, length);
+
+            if(head == null){
+                head = temp;
+                current = temp;
+            }
+            else{
+                current.next = temp;//append the new node 
+                current = current.next;//move current to the right so we can keep appending 
+            }
+        }
+
+        return head;
+    }catch(Exception e){
+        e.printStackTrace();
+        head = null;//clear the head if an error occurs so we can restart 
+    }
+    return head;
+  }
+
+  public static int countCartons(Carton head){
+    //edge case 
+    if(head == null){
+        System.out.println("Number of total lines in file input.txt is 0");
+        return 0;
+    }
+    int counter = 0;
+    Carton current = head;
+    
+    while(current != null){
+        counter++;
+        current = current.next;
+    }
+    System.out.println("Number of total lines in file input.txt is " + counter);
+    //we are not allowed to modify the call in the main to pass the String filename, so hardcode it 
+    return counter;
+  }
+
+  public static void printAllCartons(Carton head){
+    //edge case 
+    if(head == null){
+        System.out.println("List is empty");
+        return;
+    }
+    
+    Carton current = head;
+    int counter = 0;
+
+    System.out.println("---------- printAllCartons: Inventory info below: ----------");
+    while(current != null){
+        System.out.print("Carton " + counter + ": ");
+        System.out.println("W: " + current.getWidth() + " H: " + current.getHeight() + " L: " + current.getLength() + " Vol: " + current.getVolume());
+        current = current.next;//move current to the right so we can keep printing 
+        counter++;
+    }
+    System.out.println("---------- End of printAllCartons: Inventory Info ----------");
+  }
+
+  public static void cubicAnalysis(Carton head){
+    //edge case
+    if(head == null || head.next == null){
+        System.out.println("There are only 0 or 1 cartons in the list");
+        return;
+    }
+    System.out.println("---------- cubicAnalysis: ----------");
+    //length, width, and height must be the same size for carton to be cubic 
+    Carton current = head;
+    int nodeCounter = 0, cubicCounter = 0;
+    double volumeSum = 0;
+
+    while(current != null){
+        if((current.getLength() == current.getHeight()) && (current.getLength() == current.getWidth())){
+            System.out.println("A cubic carton with volume " + current.getVolume() + " is found in location " + nodeCounter);
+            volumeSum += current.getVolume();
+            cubicCounter++;
+        }
+        current = current.next;//move to the next node 
+        nodeCounter++;//increase the counter 
+    }
+    System.out.println("**** Average volume of cubic cartons: " + (volumeSum/cubicCounter));
+    System.out.println("**** Number of cubic carton: " + cubicCounter);
+    System.out.println("**** Number of non-cubic cartons: " + (nodeCounter - cubicCounter));
+    System.out.println("---------- End of cubicAnalysis: ----------");
+  }
+
+  public static void printLargestCartonInLL(Carton head){
+    //edge case
+    if(head == null || head.next == null){
+        System.out.println("There are only 0 or 1 cartons in the list");
+        return;
+    }
+    System.out.println("The largest carton information is printed below.");
+    Carton current = head;
+    Carton max = head;
+
+    while(current != null){
+        //compare a max node to every other node 
+        if(current.getVolume() > max.getVolume()){ 
+            max = current;
+        }
+        current = current.next;//move to the next node 
+    }
+    System.out.println("W: " + max.getWidth() + " H: " + max.getHeight() + " L: " + max.getLength() + " Vol: " + max.getVolume());
+  }
+
+  public static void printSmallestCartonInLL(Carton head){
+    //edge case
+    if(head == null || head.next == null){
+        System.out.println("There are only 0 or 1 cartons in the list");
+        return;
+    }
+
+    Carton current = head;
+    Carton min = head;
+
+    while(current != null){
+        if(current.getVolume() < min.getVolume()){
+            min = current;
+        }
+        current = current.next;//move to the next node 
+    }
+
+    System.out.println("The smallest carton is printed below.");
+    System.out.println("W: " + min.getWidth() + " H: " + min.getHeight() + " L: " + min.getLength() + " Vol: " + min.getVolume());
+  }
+
+  public static Carton reverseLL(Carton head){
+    //edge case
+    if(head == null || head.next == null){
+        System.out.println("There are only 0 or 1 cartons in the list");
+        return head;
+    }
+    Carton prev = null;//the new tail has to be null, so prev starts at null
+    Carton curr = head;
+    Carton next = head;
+
+    while(curr != null){
+        next = curr.next;//assign a next node
+        curr.next = prev;//point the pointers backwards 
+        //move the pointers up
+        prev = curr;
+        curr = next;
+    }
+    //the loop will exit when curr is null, so prev is my new head
+    return prev;
+  }
+  
+} 
