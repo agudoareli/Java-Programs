@@ -1,0 +1,157 @@
+import java.io.File; // allows file uploads
+import java.io.FileNotFoundException; // for try-catch exception
+import java.util.Scanner; // allows scanning of any kind
+
+class Lab1{
+  static float dailySpent = 0;
+  static double officeSupplies = 0;
+  static double marketingSupplies = 0;
+  static double travelSupplies = 0;
+  public static void main(String[] args){
+    try{
+      File myFile = new File("input.txt"); // importing my file
+      Scanner myScanner = new Scanner(myFile); // creating a scanner for my file
+      
+      dailyValueSpent(myScanner);
+      myScanner = new Scanner(myFile); // reset scanner to beginning of method
+    	computeTotalsPerCategory(myScanner);
+      myScanner = new Scanner(myFile); // reset scanner to beginning of method
+      highestAndLowestDailySpending(myScanner);
+      myScanner = new Scanner(myFile); 
+      categoryExtremes(myScanner);
+      
+    	myScanner.close(); // close scanner when done scanning
+    }
+    catch(FileNotFoundException e){
+      System.out.println("File not found");
+      e.printStackTrace();
+    }
+    
+    
+    
+  }
+  
+  // method for calculating daily spent 
+  public static void dailyValueSpent(Scanner myScanner){
+      System.out.println("----- Daily Spending -----");
+      // nested for loops for 14 rows, 3 column
+      for(int i = 0; i < 14; i++){
+        dailySpent = 0; // reset dailySpent
+        for(int j = 0; j < 3; j++){
+          // move to the next int
+          // check if theres another int before trying to scan to avoid out of bound error
+          if (myScanner.hasNextInt()){
+            float num = myScanner.nextInt(); // scan the first int in each row 
+            dailySpent += num; // add all 3 ints in each row
+          }
+        }
+        System.out.println("Day " + (i+1) + ": Total spending $" + dailySpent);
+      }
+  }
+  
+  // method for calculating running totals for each category
+  public static void computeTotalsPerCategory(Scanner myScanner){
+    System.out.println("----- Category Average -----");
+
+      for(int i = 0; i < 14; i++){
+        for(int j = 0; j < 3; j++){
+          if (j == 0){
+            // add all office supples
+            int officeSuppliesTotal = myScanner.nextInt(); // declare as the next int to get [0][0]
+            officeSupplies += officeSuppliesTotal;
+          }
+          if (j == 1){
+            // add all marketing
+            int marketingTotal = myScanner.nextInt();
+            marketingSupplies += marketingTotal;
+
+          }
+          if (j == 2){
+            // add all travel
+            int travelTotal = myScanner.nextInt();
+            travelSupplies += travelTotal;
+          }
+          
+        }
+      }
+    System.out.printf("Average spent on office supplies: $%.2f", (officeSupplies/14));
+    System.out.println();
+    System.out.printf("Average spent on marketing: $%.2f", (marketingSupplies/14));
+    System.out.println();
+    System.out.printf("Average spent on travel: $%.2f", (travelSupplies/14));
+    System.out.println();
+   }
+  
+  // method for highest and lowest daily spending
+  public static void highestAndLowestDailySpending(Scanner myScanner){
+    System.out.println("----- Highest and Lowest Daily Spending -----");
+    double maxSpent=0, dailySpent, lowestSpent= 0;
+    int highDay= 0;
+    int lowDay=0;
+   
+      // nested for loops for 14 rows, 3 column
+      for(int i = 0; i < 14; i++){
+        dailySpent = 0; // reset dailySpent
+        for(int j = 0; j < 3; j++){
+          if (myScanner.hasNextInt()){
+            int num =myScanner.nextInt(); // scan the first int in each row 
+            dailySpent += num; // add all 3 ints in each row
+          }
+        // after calculating daily spending, move outside inner loop to compare
+        }
+        if (i == 0){ // if the first day
+            maxSpent = dailySpent;
+            lowestSpent = dailySpent;
+            
+         }
+          
+         if (dailySpent > maxSpent){ // if next day greater than previous
+            maxSpent = dailySpent;
+            highDay = i+1;
+         }
+         if (dailySpent <= lowestSpent){ // <= because 540 <= 540
+            lowestSpent = dailySpent;
+            lowDay = i+1;
+         }
+      }
+    System.out.println("Highest daily spending: Day " + highDay + ": $" + maxSpent);
+    System.out.println("Lowest daily spending: Day " + lowDay + ": $" + lowestSpent); 
+  }
+  
+  // method for printing the category spending extremes
+  public static void categoryExtremes(Scanner myScanner){
+    officeSupplies /= 14;
+    marketingSupplies /= 14;
+    travelSupplies /= 14;
+    
+    System.out.println("----- Category Spending Extremes -----");
+    // category with highest average 
+    if (officeSupplies > marketingSupplies && officeSupplies > travelSupplies){
+      System.out.printf("Category with the highest average spending: Office Supplies: $%.2f", officeSupplies);
+      System.out.println();
+    }else if (marketingSupplies > officeSupplies && marketingSupplies > travelSupplies){
+      System.out.printf("Category with the highest average spending: Marketing: $%.2f", marketingSupplies);
+      System.out.println();
+    }else if(travelSupplies > officeSupplies && travelSupplies > marketingSupplies){
+      System.out.printf("Category with the highest average spending: Travel: $%.2f", travelSupplies);
+      System.out.println();
+    }
+    // category with lowest average
+    if (officeSupplies < marketingSupplies && officeSupplies < travelSupplies){
+      System.out.printf("Category with the lowest average spending: Office Supplies: $%.2f", officeSupplies);
+      System.out.println();
+    }else if (marketingSupplies < officeSupplies && marketingSupplies < travelSupplies){
+      System.out.printf("Category with the lowest average spending: Marketing: $%.2f", marketingSupplies);
+      System.out.println();
+    }else if(travelSupplies < officeSupplies && travelSupplies < marketingSupplies){
+      System.out.printf("Category with the lowest average spending: Travel: $%.2f", travelSupplies);
+      System.out.println();
+    }
+     
+
+    
+  }
+}
+
+
+       
